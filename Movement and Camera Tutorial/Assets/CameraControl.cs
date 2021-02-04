@@ -7,9 +7,9 @@ public class CameraControl : MonoBehaviour
 {
     float camera_distance = 10;
     float camera_height = 3;
-    float focus_distance = 100;
-    private Vector3 desired_position;
-    private Quaternion desired_orientation;
+ 
+
+    Transform character, focus;
 
     // Start is called before the first frame update
     void Start()
@@ -20,15 +20,18 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, desired_position, 0.05f);
-        transform.rotation = Quaternion.Slerp(transform.rotation, desired_orientation, 0.05f);
+        Vector3 desired_position = character.position - camera_distance * character.forward + camera_height * Vector3.up;
+
+        transform.position =Vector3.Lerp(transform.position, desired_position, 0.05f);
+        transform.LookAt(focus.position, Vector3.up);
     }
 
-    internal void my_Position_is(Transform character, float elevation_angle)
+    internal void Link(Transform character_transform,Transform crosshairs)
     {
-        Vector3 focus = character.position + focus_distance * character.forward;//
-        transform.position = character.position - character.forward * camera_distance + Vector3.up*camera_height;
-        transform.LookAt(focus);
+        character = character_transform;
+        focus = crosshairs;
+        
+     
 
     //    desired_position = character.position - character.forward * camera_distance + Vector3.up * camera_height;
     //    Vector3 from_camera_to_focus = focus - transform.position;
