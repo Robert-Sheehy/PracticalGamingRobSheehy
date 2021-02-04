@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class focus_control : MonoBehaviour
 {
-    private float distance_to_crosshair =100;
+    private float distance_to_crosshair =10;
+    float elevation;
     Transform owner;
     // Start is called before the first frame update
     void Start()
@@ -16,14 +17,24 @@ public class focus_control : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = owner.position + owner.forward * distance_to_crosshair;
+        
+        Vector3 desired_position  = owner.position +Quaternion.AngleAxis(elevation,owner.right)* ( owner.forward * distance_to_crosshair);
+        //transform.RotateAround(owner.position, owner.right, elevation);
+        transform.position = Vector3.Lerp(transform.position, desired_position, 0.02f);
+        transform.rotation = owner.transform.rotation;
 
+    }
 
+    internal void update_elevation(float latest_elevation)
+    {
+        elevation = latest_elevation;
     }
 
     internal void starting_setup(Transform character)
     {
-        transform.position = character.position + character.forward * distance_to_crosshair;
+    
         owner = character;
     }
+
+
 }

@@ -8,15 +8,18 @@ public class MovementController : MonoBehaviour
     focus_control cross_hair;
     float current_speed = 5;
     private float turning_speed = 180;
-    float turning_sensitivity = 10;
+    float turning_sensitivity = 20;
     float elevation_angle = 0;
     CameraControl my_camera;
     // Start is called before the first frame update
     void Start()
     {
-        my_camera = Camera.main.GetComponent<CameraControl>();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         cross_hair = FindObjectOfType<focus_control>();
         cross_hair.starting_setup(transform);
+        my_camera = Camera.main.GetComponent<CameraControl>();
+        my_camera.Link(transform, cross_hair.transform);
     }
 
     // Update is called once per frame
@@ -29,13 +32,15 @@ public class MovementController : MonoBehaviour
         if (should_strafe_right()) strafe_right();
         //if (should_turn_left()) turn_left();
         //if (should_turn_right()) turn_right();
-
+        if (Input.GetButton("Fire1")) shoot_at(cross_hair);
 
         turn(Input.GetAxis("Horizontal"));
 
-      //  elevation_angle -= Input.GetAxis("Vertical");
-       // elevation_angle = Mathf.Clamp(elevation_angle, -30, 30);
-        my_camera.my_Position_is(transform, elevation_angle);
+        elevation_angle -= Input.GetAxis("Vertical");
+        elevation_angle = Mathf.Clamp(elevation_angle , - 45f, 45f);
+        cross_hair.update_elevation(elevation_angle);
+
+       
 
 
        
@@ -46,11 +51,11 @@ public class MovementController : MonoBehaviour
 
 // Movement methods
 
-    private void shoot()
+    private void shoot_at(focus_control cross_hair)
     {
         GameObject bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         bullet.transform.position = transform.position;
-        bullet.transform.rotation = transform.rotation;
+        bullet.transform.LookAt(cross_hair.transform.position);
         bullet.AddComponent<projectile_control>();
 
 
