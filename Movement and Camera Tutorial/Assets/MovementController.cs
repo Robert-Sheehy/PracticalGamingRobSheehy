@@ -16,7 +16,9 @@ public class MovementController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        cross_hair = FindObjectOfType<focus_control>();
+        GameObject Crosshair_GO = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        cross_hair = Crosshair_GO.AddComponent<focus_control>();
         cross_hair.starting_setup(transform);
         my_camera = Camera.main.GetComponent<CameraControl>();
         my_camera.Link(transform, cross_hair.transform);
