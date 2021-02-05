@@ -22,7 +22,7 @@ public class CameraControl : MonoBehaviour
     {
         Vector3 desired_position = character.position - camera_distance * character.forward + camera_height * Vector3.up;
 
-        transform.position =Vector3.Lerp(transform.position, desired_position, 0.05f);
+        transform.position =Vector3.Lerp(transform.position, desired_position, 0.2f);
         transform.LookAt(focus.position, Vector3.up);
     }
 
@@ -33,9 +33,6 @@ public class CameraControl : MonoBehaviour
         
      
 
-    //    desired_position = character.position - character.forward * camera_distance + Vector3.up * camera_height;
-    //    Vector3 from_camera_to_focus = focus - transform.position;
-    //    desired_orientation = Quaternion.AngleAxis(elevation_angle, character.right) * Quaternion.LookRotation(from_camera_to_focus.normalized, Vector3.up) ;
-    //
+
     }
 }
