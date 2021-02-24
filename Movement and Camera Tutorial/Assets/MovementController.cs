@@ -43,7 +43,8 @@ public class MovementController : MonoBehaviour
         cross_hair.update_elevation(elevation_angle);
 
        
-
+        if (Physics.CheckSphere(transform.position+3*Vector3.up,0.5f))
+        { print("khvljhbljh"); }
 
        
     
@@ -134,5 +135,13 @@ public class MovementController : MonoBehaviour
     private bool should_strafe_left()
     {
         return Input.GetKey(KeyCode.Q);
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        CubeCollisionTest object_hit = collision.gameObject.GetComponent<CubeCollisionTest>();
+        if (object_hit)
+            object_hit.youve_been_hit();
     }
 }
