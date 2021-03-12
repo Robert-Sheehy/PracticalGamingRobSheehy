@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementController : MonoBehaviour
+public class MovementController : base_character
 {
     focus_control cross_hair;
     float current_speed = 5;
-    private float turning_speed = 180;
+
     float turning_sensitivity = 20;
     float elevation_angle = 0;
     CameraControl my_camera;
@@ -27,11 +27,7 @@ public class MovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Implement motion
-        if (should_move_forward()) move_forward();
-        if (should_move_backward()) move_backward();
-        if (should_strafe_left()) strafe_left();
-        if (should_strafe_right()) strafe_right();
+
         //if (should_turn_left()) turn_left();
         //if (should_turn_right()) turn_right();
         if (Input.GetButton("Fire1")) shoot_at(cross_hair);
@@ -46,7 +42,7 @@ public class MovementController : MonoBehaviour
         if (Physics.CheckSphere(transform.position+3*Vector3.up,0.5f))
         { print("khvljhbljh"); }
 
-       
+        base.Update();
     
     
     
@@ -68,53 +64,12 @@ public class MovementController : MonoBehaviour
     {
         transform.Rotate(Vector3.up, turning_sensitivity* Input_axis_value * Time.deltaTime);
     }
-    private void turn_right()
-    {
-        transform.Rotate(Vector3.up, turning_speed * Time.deltaTime);
-    }
-
-    private void turn_left()
-    {
-        transform.Rotate(Vector3.up, -turning_speed * Time.deltaTime);
-    }
-
-
-    private void strafe_right()
-    {
-        transform.position += current_speed * transform.right * Time.deltaTime;
-    }
-
-
-    private void strafe_left()
-    {
-        transform.position -= current_speed * transform.right * Time.deltaTime;
-    }
-
-
-    /// <summary>
-    /// Move the gameobject forward relative to its own orientation
-    /// </summary>
-    private void move_forward()
-    {
-
-        transform.position += current_speed*transform.forward * Time.deltaTime ;
-    }
-    private void move_backward()
-    {
-
-        transform.position -= current_speed * transform.forward * Time.deltaTime;
-    }
+  
 
     // User input for movement
-    private bool should_move_forward()
-    {
-        return Input.GetKey(KeyCode.W);
-    }
 
-    private bool should_move_backward()
-    {
-        return Input.GetKey(KeyCode.S);
-    }
+
+
 
 
     private bool should_turn_right()
@@ -127,21 +82,50 @@ public class MovementController : MonoBehaviour
         return Input.GetKey(KeyCode.A);
     }
 
-    private bool should_strafe_right()
-    {
-        return Input.GetKey(KeyCode.E);
-    }
 
-    private bool should_strafe_left()
-    {
-        return Input.GetKey(KeyCode.Q);
-    }
+
+
 
 
     private void OnCollisionEnter(Collision collision)
     {
-        CubeCollisionTest object_hit = collision.gameObject.GetComponent<CubeCollisionTest>();
-        if (object_hit)
-            object_hit.youve_been_hit();
+        IDamagable object_hit = collision.gameObject.GetComponent<IDamagable>();
+        if (object_hit != null)
+        {
+            object_hit.apply_damage(45);
+            if (object_hit is CubeCollisionTest)
+            {
+                (object_hit as CubeCollisionTest).youve_been_hit();
+            }
+
+        }
+    }
+
+    internal override bool should_move_forward()
+    {
+ 
+            return Input.GetKey(KeyCode.W);
+   
+    }
+
+    internal override bool should_move_backward()
+    {
+
+            return Input.GetKey(KeyCode.S);
+  
+    }
+
+    internal override bool should_strafe_left()
+    {
+
+            return Input.GetKey(KeyCode.Q);
+        
+    }
+
+    internal override bool should_strafe_right()
+    {
+
+            return Input.GetKey(KeyCode.E);
+     
     }
 }
