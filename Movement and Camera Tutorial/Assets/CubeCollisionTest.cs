@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeCollisionTest : MonoBehaviour
+public class CubeCollisionTest : base_character,IDamagable
 {
     bool isSpinning = false;
     Rigidbody physics_move;
@@ -21,12 +21,32 @@ public class CubeCollisionTest : MonoBehaviour
     void Update()
     {
         if (isSpinning)
-            physics_move.angularVelocity = new Vector3(0, 180, 0);
+            turn_left();
     }
 
     internal void youve_been_hit()
     {
         isSpinning = true;
         ourRenderer.material.color = Color.yellow;
+    }
+
+    internal override bool should_move_forward()
+    {
+        return false;
+    }
+
+    internal override bool should_move_backward()
+    {
+        return false;
+    }
+
+    internal override bool should_strafe_left()
+    {
+        return false;
+    }
+
+    internal override bool should_strafe_right()
+    {
+        return true;
     }
 }
